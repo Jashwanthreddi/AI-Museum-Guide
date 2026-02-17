@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salarjung Museum Voice Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #E3F2FD;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.1);
+            border: 2px solid #1976D2;
+        }
+
+        h1 {
+            font-family: 'Crimson Text', serif;
+            color: #1565C0;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.1);
+        }
+
+        .voice-controls {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        button {
+            padding: 15px 40px;
+            margin: 10px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        #startButton {
+            background: linear-gradient(45deg, #1976D2, #2196F3);
+            color: #FFF5E1;
+        }
+
+        #startButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        #stopButton {
+            background: #DC3545;
+            color: #FFF5E1;
+        }
+
+        #stopButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            color: #37474F;
+            font-weight: 500;
+            background: #E3F2FD;
+            border: 1px solid #1976D2;
+        }
+
+        .transcript, .response {
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: 15px;
+            background: #E3F2FD;
+            border: 1px solid #1976D2;
+        }
+
+        .transcript h3, .response h3 {
+            font-family: 'Crimson Text', serif;
+            color: #1565C0;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .transcript p, .response p {
+            color: #37474F;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .decorative-pattern {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0.1;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%231976D2" d="M0 0h100v100H0z"/></svg>') repeat;
+            z-index: -1;
+        }
+
+        .pattern-1 {
+            top: 20px;
+            left: 20px;
+            transform: rotate(45deg);
+        }
+
+        .pattern-2 {
+            bottom: 20px;
+            right: 20px;
+            transform: rotate(-45deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="decorative-pattern pattern-1"></div>
+        <div class="decorative-pattern pattern-2"></div>
+        
+        <h1>Salarjung Museum Voice Guide</h1>
+        <div class="voice-controls">
+            <button id="startButton">Start Listening</button>
+            <button id="stopButton" style="display: none;">Stop Listening</button>
+        </div>
+        <div class="status" id="status">Click 'Start Listening' to begin your museum exploration</div>
+        <div class="transcript">
+            <h3>Your Question:</h3>
+            <p id="transcript"></p>
+        </div>
+        <div class="response">
+            <h3>Museum Guide Response:</h3>
+            <p id="response"></p>
+        </div>
+    </div>
+
+    <script>
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const statusDiv = document.getElementById('status');
+        const transcriptDiv = document.getElementById('transcript');
+        const responseDiv = document.getElementById('response');
+
+        let recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        let synth = window.speechSynthesis;
+
+        // Add greeting patterns
+        const GREETING_PATTERNS = [
+            'hi',
+            'hello',
+            'hey',
+            'greetings',
+            'good morning',
+            'good afternoon',
+            'good evening'
+        ];
+
+        function isGreeting(text) {
+            return GREETING_PATTERNS.some(pattern => 
+                text.toLowerCase().trim() === pattern
+            );
+        }
+
+        function getGreetingResponse() {
+            return {
+                response: `Hello! Welcome to the Salarjung Museum AI Guide. I'm here to help you explore our magnificent collection and answer any questions about:
+- Museum locations and directions
+- Transportation and how to reach us
+- Museum facilities and amenities
+- Our galleries and exhibitions
+- Museum publications and resources
+- Scholar facilities and library
+- And much more!
+
+What would you like to know about the museum?`
+            };
+        }
+
+        startButton.addEventListener('click', () => {
+            startButton.style.display = 'none';
+            stopButton.style.display = 'inline-block';
+            statusDiv.textContent = 'Listening...';
+            statusDiv.classList.add('pulse');
+            recognition.start();
+        });
+
+        stopButton.addEventListener('click', () => {
+            startButton.style.display = 'inline-block';
+            stopButton.style.display = 'none';
+            statusDiv.textContent = 'Stopped listening';
+            statusDiv.classList.remove('pulse');
+            recognition.stop();
+            synth.cancel();
+            transcriptDiv.textContent = '';
+        });
+
+        recognition.onresult = (event) => {
+            const currentTranscript = event.results[event.results.length - 1][0].transcript;
+            transcriptDiv.textContent = currentTranscript;
+
+            if (event.results[event.results.length - 1].isFinal) {
+                // Check if it's a greeting first
+                if (isGreeting(currentTranscript)) {
+                    const greetingResponse = getGreetingResponse();
+                    responseDiv.textContent = greetingResponse.response;
+                    speakResponse(greetingResponse.response);
+                    statusDiv.textContent = 'Ready for next question';
+                } else {
+                    askQuestion(currentTranscript);
+                }
+            }
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            statusDiv.textContent = 'Error: ' + event.error;
+        };
+
+        recognition.onend = () => {
+            if (stopButton.style.display === 'inline-block') {
+                recognition.start();
+            }
+        };
+
+        function askQuestion(question) {
+            statusDiv.textContent = 'Processing your question...';
+            
+            // Only make API call if it's not a greeting
+            if (!isGreeting(question)) {
+                fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question: question })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    responseDiv.textContent = data.response;
+                    speakResponse(data.response);
+                    statusDiv.textContent = 'Ready for next question';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    statusDiv.textContent = 'Error processing question';
+                });
+            }
+        }
+
+        function speakResponse(text) {
+            synth.cancel();
+            
+            setTimeout(() => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+
+                utterance.onend = () => {
+                    statusDiv.textContent = 'Ready for next question';
+                };
+
+                utterance.oncancel = () => {
+                    statusDiv.textContent = 'Ready for next question';
+                };
+
+                synth.speak(utterance);
+            }, 100);
+        }
+    </script>
+</body>
+</html>                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

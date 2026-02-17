@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salarjung Museum Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #E3F2FD;  /* Light blue background */
+            color: #1A237E;      /* Dark blue text */
+        }
+
+        .main-container {
+            min-height: 100vh;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23E3F2FD" width="100" height="100"/><path fill="%23BBDEFB" fill-opacity="0.4" d="M0 0h100v100H0z" transform="translate(5 5)"/></svg>') repeat;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1976D2, #1565C0);  /* Blue gradient */
+            padding: 4rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23ffffff" fill-opacity="0.1" d="M0 0h100v100H0z"/></svg>') repeat;
+            opacity: 0.1;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.2));
+            pointer-events: none;
+        }
+
+        .logo-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 4.5rem;
+            color: #FFFFFF;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+        }
+
+        .tagline {
+            color: #E3F2FD;  /* Light blue text */
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .service-card {
+            background: #FFFFFF;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s ease;
+            border: 2px solid #1976D2;  /* Blue border */
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #1976D2, #2196F3);  /* Blue gradient */
+            z-index: -1;
+            border-radius: 17px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-title {
+            font-family: 'Crimson Text', serif;
+            color: #1565C0;  /* Darker blue */
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-description {
+            color: #37474F;  /* Dark gray-blue */
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #1976D2, #2196F3);  /* Blue gradient */
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(25, 118, 210, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(25, 118, 210, 0.3);
+        }
+
+        .about-section {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #1976D2, #2196F3);  /* Blue gradient */
+        }
+
+        .about-title {
+            font-family: 'Crimson Text', serif;
+            color: #1565C0;  /* Darker blue */
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .about-text {
+            color: #37474F;  /* Dark gray-blue */
+            line-height: 1.8;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .decorative-pattern {
+            position: absolute;
+            opacity: 0.1;
+        }
+
+        .pattern-1 {
+            top: 0;
+            left: 0;
+            width: 200px;
+            height: 200px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%231976D2" d="M0 0h100v100H0z"/></svg>') repeat;
+            transform: rotate(45deg);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 3rem 1rem;
+                min-height: 40vh;
+            }
+            .logo-title {
+                font-size: 3rem;
+            }
+            .tagline {
+                font-size: 1.2rem;
+            }
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .about-section {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header class="header">
+            <h1 class="logo-title">Salarjung Museum</h1>
+            <p class="tagline">Discover centuries of art and culture through AI-powered exploration</p>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">💬</div>
+                    <h2 class="service-title">Chat Guide</h2>
+                    <p class="service-description">Explore the museum's vast collection through interactive text conversations. Get detailed insights about artifacts and their historical significance.</p>
+                    <a href="/chat" class="cta-button">Start Chatting</a>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">🗣️</div>
+                    <h2 class="service-title">Voice Guide</h2>
+                    <p class="service-description">Experience hands-free exploration with our voice-activated guide. Perfect for an immersive and natural museum experience.</p>
+                    <a href="/voice" class="cta-button">Start Speaking</a>
+                </div>
+            </div>
+
+            <div class="about-section">
+                <div class="decorative-pattern pattern-1"></div>
+                <h2 class="about-title">The Salarjung Legacy</h2>
+                <p class="about-text">Immerse yourself in one of India's most remarkable collections, featuring over a million artifacts that span centuries of human artistry and innovation. From exquisite Mughal miniatures to European masterpieces, each piece tells a unique story of our shared cultural heritage.</p>
+                <br>
+                <p class="about-text">Let our intelligent guides help you uncover the fascinating stories and hidden details behind each masterpiece in this extraordinary collection.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
